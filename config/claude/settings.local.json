@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pgrep:*)",
+      "Bash(zellij list-sessions:*)",
+      "Bash(zellij delete-session:*)"
+    ]
+  }
+}

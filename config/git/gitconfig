@@ -1,0 +1,12 @@
+# This is Git's per-user configuration file.
+[user]
+name = Nicholas Heggart-Richer
+email = nicholas@gadget.dev
+[push]
+	autoSetupRemote = true
+[alias]
+	gs = status
+[core]
+	excludesfile = /Users/nhricher/.config/git/ignore
+[init]
+	defaultBranch = main

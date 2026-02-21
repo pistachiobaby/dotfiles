@@ -1,0 +1,11 @@
+# Local scripts
+.vscode/scripts/
+.claude/rules/shopify-webhook-filtering.md
+
+**/.claude/settings.local.json
+
+# Personal Cursor rules (symlinked from ~/.cursor/rules/)
+.cursor/rules/customer-emails.mdc
+
+# Personal skills
+.claude/skills/gadget-crm/

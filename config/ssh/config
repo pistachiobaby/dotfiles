@@ -1,0 +1,32 @@
+# Added by OrbStack: 'orb' SSH host for Linux machines
+# This only works if it's at the top of ssh_config (before any Host blocks).
+# This won't be added again if you remove it.
+Include ~/.orbstack/ssh/config
+
+Host github.com
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_ed25519
+
+# ------------START-CODER-----------
+# This section is managed by coder. DO NOT EDIT.
+#
+# You should not hand-edit this section unless you are removing it, all
+# changes will be lost when running "coder config-ssh".
+#
+Host coder.*
+	ConnectTimeout=0
+	StrictHostKeyChecking=no
+	UserKnownHostsFile=/dev/null
+	LogLevel ERROR
+	ProxyCommand /opt/homebrew/bin/coder --global-config "/Users/nhricher/Library/Application Support/coderv2" ssh --stdio --ssh-host-prefix coder. %h
+
+Host *.coder
+	ConnectTimeout=0
+	StrictHostKeyChecking=no
+	UserKnownHostsFile=/dev/null
+	LogLevel ERROR
+
+Match host *.coder !exec "/opt/homebrew/bin/coder connect exists %h"
+	ProxyCommand /opt/homebrew/bin/coder --global-config "/Users/nhricher/Library/Application Support/coderv2" ssh --stdio --hostname-suffix coder %h
+# ------------END-CODER------------
