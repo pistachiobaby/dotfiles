@@ -32,6 +32,17 @@ eval "$(atuin init zsh --disable-up-arrow)"
 # Zellij
 eval "$(zellij setup --generate-auto-start zsh)"
 
+# Wrap brew to auto-update Brewfile on install/uninstall
+brew() {
+  command brew "$@"
+  local ret=$?
+  if [[ $ret -eq 0 && "$1" =~ ^(install|uninstall|remove|tap|untap)$ ]]; then
+    command brew bundle dump --file="$HOME/dotfiles/Brewfile" --describe --force
+    echo "Brewfile updated"
+  fi
+  return $ret
+}
+
 # Aliases
 alias p="pnpm"
 alias zshconfig="vim ~/.zshrc"

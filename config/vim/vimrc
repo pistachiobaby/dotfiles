@@ -25,3 +25,11 @@ nnoremap <C-j> L
 " move vertically by visual line with j and k
 nnoremap j gj
 nnoremap k gk
+
+" Scrolling
+set scrolloff=8
+set sidescrolloff=8
+set ttyfast
+set mouse=a
+nnoremap <C-d> <C-d>zz
+nnoremap <C-u> <C-u>zz
