@@ -1,0 +1,116 @@
+# If you come from bash you might have to change your $PATH.
+# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+
+# Path to your Oh My Zsh installation.
+export ZSH="$HOME/.oh-my-zsh"
+source $ZSH/oh-my-zsh.sh
+
+# Set name of the theme to load --- if set to "random", it will
+# load a random theme each time Oh My Zsh is loaded, in which case,
+# to know which specific one was loaded, run: echo $RANDOM_THEME
+# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+ZSH_THEME="robbyrussell"
+
+# CONFIGURATION
+plugins=(git)
+
+
+# Gadget NIX
+# Nix
+if [ -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
+  source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+fi
+# End Nix
+
+eval "$(direnv hook zsh)"
+
+
+# Atuin
+eval "$(atuin init zsh --disable-up-arrow)"
+. "$HOME/.atuin/bin/env"
+
+# Zellij
+eval "$(zellij setup --generate-auto-start zsh)"
+
+# Aliases
+alias p="pnpm"
+alias zshconfig="vim ~/.zshrc"
+alias zshreset="source ~/.zshrc"
+alias gs="git status"
+alias fpush="git push --force-with-lease"
+alias zstop="~/.config/zellij/scripts/stop-all-panes.sh"
+alias zdev="zellij --layout gadget-dev"
+alias k="kubectl"
+alias zz="zellij"
+alias sessions="zellij list-sessions"
+alias claude="claude --dangerously-skip-permissions"
+cwt() {
+  claude-worktree "$@"
+  local target
+  target=$(cat /tmp/.cwt-cd-target 2>/dev/null)
+  if [[ -n "$target" && -d "$target" ]]; then
+    cd "$target" || return
+    rm -f /tmp/.cwt-cd-target
+  fi
+}
+
+# Ctrl+Q to stop all Zellij panes
+zstop-widget() {
+  ~/.config/zellij/scripts/stop-all-panes.sh
+  zle reset-prompt
+}
+zle -N zstop-widget
+bindkey '^Q' zstop-widget
+
+# starship
+eval "$(starship init zsh)"
+
+# Syntax highlighting
+#source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# Auto suggestion
+#source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# kill ports
+# Function to kill processes running on specified ports
+kill_ports() {
+    if [ $# -eq 0 ]; then
+        echo "Usage: kill_ports <port1> <port2> ..."
+        return 1
+    fi
+
+    for port in "$@"; do
+        echo -ne "Checking port $port...\r"
+        local pid=$(lsof -ti:$port)
+
+        if [ -z "$pid" ]; then
+            echo -e "Port $port: no process found            "
+            continue
+        fi
+
+        echo -e "Port $port: found process $pid          "
+        echo -ne "Killing process $pid...\r"
+
+        kill "$pid" 2>/dev/null
+        sleep 1
+
+        if ps -p "$pid" > /dev/null; then
+            echo -e "Port $port: graceful kill failed, forcing kill"
+            kill -9 "$pid" 2>/dev/null
+            echo -e "Port $port: process $pid forcibly terminated"
+        else
+            echo -e "Port $port: process $pid terminated successfully"
+        fi
+    done
+}
+
+alias dev-fucked='kill_ports 3000 3001 6000 6666 6667 7233 9000 9464 9980 9200 15432 15433 16379 16381 16382 16383'
+
+# Wrap ssh to reset kitty keyboard protocol after disconnect
+ssh() {
+  command ssh "$@"
+  local ret=$?
+  printf '\e[?u\e[>0u' 2>/dev/null
+  return $ret
+}
+export PATH="$HOME/scripts:$HOME/.local/bin:$PATH"

@@ -1,0 +1,27 @@
+syntax on
+
+" Escape
+nmap fd <Esc>
+imap fd <Esc>
+vmap fd <Esc>
+omap fd <Esc>
+
+" Map Shift+H to beginning of line (first non-blank character)
+nnoremap <S-h> ^
+vnoremap <S-h> ^
+
+" Map Shift+L to end of line
+nnoremap <S-l> $
+vnoremap <S-l> $
+
+" Set leader to spacebar
+let mapleader = " "
+
+" Map to top of screen
+nnoremap <C-k> H
+" Map to bottom of screen
+nnoremap <C-j> L
+
+" move vertically by visual line with j and k
+nnoremap j gj
+nnoremap k gk

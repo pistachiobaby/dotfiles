@@ -1,0 +1,24 @@
+layout {
+    pane split_direction="vertical" size="100%" {
+        // Left pane - biggest, for dev:api (waits for postgres and redis)
+        pane size="60%" command="direnv" {
+            args "exec" "." "bash" "-c" "wait-for-it -t 90 localhost:15432 && wait-for-it -t 90 localhost:16379 && pnpm dev:api"
+            cwd "/Users/nhricher/dev/gadget"
+        }
+        // Right side - stacked panes
+        pane split_direction="horizontal" size="40%" {
+            pane command="direnv" {
+                args "exec" "." "dev-background"
+                cwd "/Users/nhricher/dev/gadget"
+            }
+            pane command="direnv" {
+                args "exec" "." "bash" "-c" "wait-for-it -t 90 localhost:15432 && wait-for-it -t 90 localhost:16379 && pnpm dev:api:temporal-worker"
+                cwd "/Users/nhricher/dev/gadget"
+            }
+            pane command="direnv" {
+                args "exec" "." "pnpm" "dev:web"
+                cwd "/Users/nhricher/dev/gadget"
+            }
+        }
+    }
+}
