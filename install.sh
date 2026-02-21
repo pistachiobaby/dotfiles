@@ -4,58 +4,50 @@ set -euo pipefail
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 CONFIG_DIR="$DOTFILES_DIR/config"
 
-# Each line: <source relative to config/> <symlink target>
-MAPPINGS=(
-  # vim
-  "vim/vimrc:$HOME/.vimrc"
-  # zsh
-  "zsh/zshrc:$HOME/.zshrc"
-  # zellij
-  "zellij/config.kdl:$HOME/.config/zellij/config.kdl"
-  "zellij/layouts/default.kdl:$HOME/.config/zellij/layouts/default.kdl"
-  "zellij/layouts/grouped.kdl:$HOME/.config/zellij/layouts/grouped.kdl"
-  "zellij/layouts/gadget-dev.kdl:$HOME/.config/zellij/layouts/gadget-dev.kdl"
-  "zellij/scripts/stop-all-panes.sh:$HOME/.config/zellij/scripts/stop-all-panes.sh"
-  # atuin
-  "atuin/config.toml:$HOME/.config/atuin/config.toml"
-  # git
-  "git/gitconfig:$HOME/.gitconfig"
-  "git/ignore:$HOME/.config/git/ignore"
-  # ssh
-  "ssh/config:$HOME/.ssh/config"
-  # karabiner
-  "karabiner/karabiner.json:$HOME/.config/karabiner/karabiner.json"
-  # github cli
-  "gh/config.yml:$HOME/.config/gh/config.yml"
-  # ghostty
-  "ghostty/config:$HOME/Library/Application Support/com.mitchellh.ghostty/config"
-  # claude code
-  "claude/settings.json:$HOME/.claude/settings.json"
-  "claude/settings.local.json:$HOME/.claude/settings.local.json"
-  "claude/keybindings.json:$HOME/.claude/keybindings.json"
-  "claude/rules/clipboard.md:$HOME/.claude/rules/clipboard.md"
-  "claude/rules/cost-optimization.md:$HOME/.claude/rules/cost-optimization.md"
-  "claude/rules/email-tone.md:$HOME/.claude/rules/email-tone.md"
-  "claude/rules/pr-descriptions.md:$HOME/.claude/rules/pr-descriptions.md"
-  "claude/rules/technical-explanations.md:$HOME/.claude/rules/technical-explanations.md"
-  "claude/hooks/notify.sh:$HOME/.claude/hooks/notify.sh"
-  "claude/hooks/rename-tab.sh:$HOME/.claude/hooks/rename-tab.sh"
-  "claude/skills/pr-overview/SKILL.md:$HOME/.claude/skills/pr-overview/SKILL.md"
-  "claude/skills/slack-writeup/SKILL.md:$HOME/.claude/skills/slack-writeup/SKILL.md"
-)
+# --- Target resolution ---
+# Most files: config/<app>/<path> → ~/.config/<app>/<path>
+# Exceptions handled by case statements in resolve_target.
+
+# Directories to skip (source code, built artifacts, etc.)
+EXCLUDE_DIRS=("zellij/plugins")
+
+resolve_target() {
+  local rel="$1"
+  local top_dir="${rel%%/*}"
+  local rest="${rel#*/}"
+
+  # File-level overrides (files that don't follow any directory convention)
+  case "$rel" in
+    vim/vimrc)     echo "$HOME/.vimrc" ;;
+    zsh/zshrc)     echo "$HOME/.zshrc" ;;
+    ssh/config)    echo "$HOME/.ssh/config" ;;
+    git/gitconfig) echo "$HOME/.gitconfig" ;;
+    *)
+      # Directory-level overrides
+      case "$top_dir" in
+        claude)  echo "$HOME/.claude/$rest" ;;
+        ghostty) echo "$HOME/Library/Application Support/com.mitchellh.ghostty/$rest" ;;
+        *)       echo "$HOME/.config/$rel" ;;
+      esac
+      ;;
+  esac
+}
+
+# --- Symlink all config files ---
 
 errors=0
 
-for mapping in "${MAPPINGS[@]}"; do
-  src="$CONFIG_DIR/${mapping%%:*}"
-  target="${mapping#*:}"
+while IFS= read -r src; do
+  rel="${src#$CONFIG_DIR/}"
 
-  # Source must exist in repo
-  if [ ! -e "$src" ]; then
-    echo "MISSING  $src (skipped)"
-    errors=$((errors + 1))
-    continue
-  fi
+  # Skip excluded directories
+  skip=false
+  for excl in "${EXCLUDE_DIRS[@]}"; do
+    if [[ "$rel" == "$excl"/* ]]; then skip=true; break; fi
+  done
+  $skip && continue
+
+  target="$(resolve_target "$rel")"
 
   # Create parent directory if needed
   mkdir -p "$(dirname "$target")"
@@ -83,10 +75,22 @@ for mapping in "${MAPPINGS[@]}"; do
 
   ln -s "$src" "$target"
   echo "linked   $target → $src"
-done
+done < <(find "$CONFIG_DIR" -type f | sort)
 
 if [ "$errors" -gt 0 ]; then
   echo ""
-  echo "$errors source file(s) missing in repo — check mappings"
+  echo "$errors error(s) — check output above"
   exit 1
+fi
+
+# --- Build zellij plugins (requires Rust + wasm32-wasip1 target) ---
+
+PANE_GROUPS_DIR="$CONFIG_DIR/zellij/plugins/pane-groups"
+if [ -f "$PANE_GROUPS_DIR/build.sh" ] && command -v cargo >/dev/null 2>&1; then
+  echo ""
+  echo "Building zellij pane-groups plugin..."
+  "$PANE_GROUPS_DIR/build.sh"
+elif [ -f "$PANE_GROUPS_DIR/build.sh" ]; then
+  echo ""
+  echo "SKIP     pane-groups plugin (cargo not found — install Rust to build)"
 fi
