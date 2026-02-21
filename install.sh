@@ -40,9 +40,18 @@ MAPPINGS=(
   "claude/skills/slack-writeup/SKILL.md:$HOME/.claude/skills/slack-writeup/SKILL.md"
 )
 
+errors=0
+
 for mapping in "${MAPPINGS[@]}"; do
   src="$CONFIG_DIR/${mapping%%:*}"
   target="${mapping#*:}"
+
+  # Source must exist in repo
+  if [ ! -e "$src" ]; then
+    echo "MISSING  $src (skipped)"
+    errors=$((errors + 1))
+    continue
+  fi
 
   # Create parent directory if needed
   mkdir -p "$(dirname "$target")"
@@ -53,10 +62,14 @@ for mapping in "${MAPPINGS[@]}"; do
     continue
   fi
 
-  # Regular file exists — back it up
+  # Regular file exists — back it up (don't clobber existing backups)
   if [ -e "$target" ] && [ ! -L "$target" ]; then
-    mv "$target" "$target.backup"
-    echo "backup   $target → $target.backup"
+    backup="$target.backup"
+    if [ -e "$backup" ]; then
+      backup="$target.backup.$(date +%s)"
+    fi
+    mv "$target" "$backup"
+    echo "backup   $target → $backup"
   fi
 
   # Stale symlink — remove it
@@ -67,3 +80,9 @@ for mapping in "${MAPPINGS[@]}"; do
   ln -s "$src" "$target"
   echo "linked   $target → $src"
 done
+
+if [ "$errors" -gt 0 ]; then
+  echo ""
+  echo "$errors source file(s) missing in repo — check mappings"
+  exit 1
+fi
