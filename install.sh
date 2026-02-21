@@ -12,6 +12,7 @@ MAPPINGS=(
   "zsh/zshrc:$HOME/.zshrc"
   # zellij
   "zellij/config.kdl:$HOME/.config/zellij/config.kdl"
+  "zellij/layouts/default.kdl:$HOME/.config/zellij/layouts/default.kdl"
   "zellij/layouts/gadget-dev.kdl:$HOME/.config/zellij/layouts/gadget-dev.kdl"
   "zellij/scripts/stop-all-panes.sh:$HOME/.config/zellij/scripts/stop-all-panes.sh"
   # atuin
