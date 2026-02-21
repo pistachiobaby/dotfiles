@@ -148,6 +148,22 @@ keybinds clear-defaults=true {
         bind "Alt l" { MoveFocusOrTab "right"; }
         bind "Alt n" { NewPane; }
         bind "Alt o" { MoveTab "right"; }
+        bind "Alt g" {
+            LaunchOrFocusPlugin "file:~/.config/zellij/plugins/pane-groups.wasm" {
+                floating true
+                move_to_focused_tab true
+            }
+        }
+        bind "Alt ," {
+            MessagePlugin "file:~/.config/zellij/plugins/pane-groups.wasm" {
+                name "prev_group"
+            }
+        }
+        bind "Alt ." {
+            MessagePlugin "file:~/.config/zellij/plugins/pane-groups.wasm" {
+                name "next_group"
+            }
+        }
         // Ctrl+Q passed through to shell for zstop alias
         // Use "zellij kill-session" or "zellij kill-all-sessions" to quit
     }
@@ -450,6 +466,8 @@ load_plugins {
 // Default: true
 // 
 show_startup_tips false
+
+mouse_hover_effects false
  
 // Whether to show release notes on first version run
 // Default: true
