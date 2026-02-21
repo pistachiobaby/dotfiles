@@ -1,0 +1,16 @@
+layout {
+    pane stacked=true {
+        pane split_direction="vertical" name="group-1" {
+            pane
+            pane
+        }
+        pane split_direction="vertical" name="group-2" {
+            pane
+            pane
+        }
+        pane name="solo"
+    }
+    pane size=1 borderless=true {
+        plugin location="compact-bar"
+    }
+}

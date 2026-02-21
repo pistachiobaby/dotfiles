@@ -13,6 +13,7 @@ MAPPINGS=(
   # zellij
   "zellij/config.kdl:$HOME/.config/zellij/config.kdl"
   "zellij/layouts/default.kdl:$HOME/.config/zellij/layouts/default.kdl"
+  "zellij/layouts/grouped.kdl:$HOME/.config/zellij/layouts/grouped.kdl"
   "zellij/layouts/gadget-dev.kdl:$HOME/.config/zellij/layouts/gadget-dev.kdl"
   "zellij/scripts/stop-all-panes.sh:$HOME/.config/zellij/scripts/stop-all-panes.sh"
   # atuin
@@ -26,6 +27,8 @@ MAPPINGS=(
   "karabiner/karabiner.json:$HOME/.config/karabiner/karabiner.json"
   # github cli
   "gh/config.yml:$HOME/.config/gh/config.yml"
+  # ghostty
+  "ghostty/config:$HOME/Library/Application Support/com.mitchellh.ghostty/config"
   # claude code
   "claude/settings.json:$HOME/.claude/settings.json"
   "claude/settings.local.json:$HOME/.claude/settings.local.json"
