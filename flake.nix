@@ -36,6 +36,7 @@
               pkgs.nodejs
               pkgs.xxh
               pkgs.zellij
+              pkgs.zsh
               pkgs.zsh-autosuggestions
               pkgs.zsh-syntax-highlighting
               pkgs.coder
