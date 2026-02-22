@@ -14,9 +14,6 @@ fi
 # Most files: config/<app>/<path> → ~/.config/<app>/<path>
 # Exceptions handled by case statements in resolve_target.
 
-# Directories to skip (source code, built artifacts, etc.)
-EXCLUDE_DIRS=("zellij/plugins")
-
 resolve_target() {
   local rel="$1"
   local top_dir="${rel%%/*}"
@@ -45,13 +42,6 @@ errors=0
 
 while IFS= read -r src; do
   rel="${src#$CONFIG_DIR/}"
-
-  # Skip excluded directories
-  skip=false
-  for excl in "${EXCLUDE_DIRS[@]}"; do
-    if [[ "$rel" == "$excl"/* ]]; then skip=true; break; fi
-  done
-  $skip && continue
 
   target="$(resolve_target "$rel")"
 
@@ -102,16 +92,4 @@ elif command -v nix >/dev/null 2>&1 && [ -f "$DOTFILES_DIR/flake.nix" ]; then
   else
     nix profile install "$DOTFILES_DIR"
   fi
-fi
-
-# --- Build zellij plugins (requires Rust + wasm32-wasip1 target) ---
-
-PANE_GROUPS_DIR="$CONFIG_DIR/zellij/plugins/pane-groups"
-if [ -f "$PANE_GROUPS_DIR/build.sh" ] && command -v cargo >/dev/null 2>&1; then
-  echo ""
-  echo "Building zellij pane-groups plugin..."
-  "$PANE_GROUPS_DIR/build.sh"
-elif [ -f "$PANE_GROUPS_DIR/build.sh" ]; then
-  echo ""
-  echo "SKIP     pane-groups plugin (cargo not found — install Rust to build)"
 fi

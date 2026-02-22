@@ -142,28 +142,15 @@ keybinds clear-defaults=true {
         bind "Alt f" { ToggleFloatingPanes; }
         bind "Ctrl g" { SwitchToMode "locked"; }
         bind "Alt h" { MoveFocusOrTab "left"; }
+        bind "Alt H" { GoToPreviousTab; }
         bind "Alt i" { MoveTab "left"; }
         bind "Alt j" { MoveFocus "down"; }
         bind "Alt k" { MoveFocus "up"; }
         bind "Alt l" { MoveFocusOrTab "right"; }
+        bind "Alt L" { GoToNextTab; }
         bind "Alt n" { NewPane; }
+        bind "Alt x" { CloseFocus; }
         bind "Alt o" { MoveTab "right"; }
-        bind "Alt g" {
-            LaunchOrFocusPlugin "file:~/.config/zellij/plugins/pane-groups.wasm" {
-                floating true
-                move_to_focused_tab true
-            }
-        }
-        bind "Alt ," {
-            MessagePlugin "file:~/.config/zellij/plugins/pane-groups.wasm" {
-                name "prev_group"
-            }
-        }
-        bind "Alt ." {
-            MessagePlugin "file:~/.config/zellij/plugins/pane-groups.wasm" {
-                name "next_group"
-            }
-        }
         // Ctrl+Q passed through to shell for zstop alias
         // Use "zellij kill-session" or "zellij kill-all-sessions" to quit
     }
@@ -467,7 +454,7 @@ load_plugins {
 // 
 show_startup_tips false
 
-mouse_hover_effects false
+advanced_mouse_actions false
  
 // Whether to show release notes on first version run
 // Default: true

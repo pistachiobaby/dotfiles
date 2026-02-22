@@ -1,6 +1,6 @@
 # dotfiles
 
-Personal dotfiles for macOS. One script sets up everything — symlinks configs, installs packages, and builds plugins.
+Personal dotfiles for macOS. One script sets up everything — symlinks configs and installs packages.
 
 ## Setup
 
@@ -11,11 +11,10 @@ git clone https://github.com/pistachiobaby/dotfiles.git ~/dotfiles
 cd ~/dotfiles && ./install.sh
 ```
 
-`install.sh` does three things:
+`install.sh` does two things:
 
 1. Symlinks everything in `config/` to the right place (`~/.config/`, `~/.zshrc`, etc.)
 2. Installs packages via Homebrew (`Brewfile`) or Nix (`flake.nix`) as a fallback
-3. Builds the Zellij pane-groups plugin if Rust is available
 
 Existing files are backed up before being replaced. Running it again is safe — it skips links that are already correct.
 
@@ -31,7 +30,7 @@ config/
 ├── karabiner/    Caps Lock → Ctrl, Right Cmd+hjkl → arrows
 ├── ssh/          SSH client config
 ├── vim/          fd → Esc, Space leader, visual line movement
-├── zellij/       Multiplexer config, layouts, custom WASM plugin
+├── zellij/       Multiplexer config and layouts
 └── zsh/          Oh My Zsh, aliases, brew wrapper, Zellij auto-start
 ```
 
@@ -43,7 +42,7 @@ Useful aliases: `p` (pnpm), `k` (kubectl), `zdev` (Gadget dev layout), `zstop` /
 
 ### Zellij
 
-Vim-style keybindings with cleared defaults. Includes a custom Rust/WASM plugin for pane groups — `Alt+g` to open, `Alt+,`/`Alt+.` to cycle between groups. Two layouts: a default stacked layout and `gadget-dev` for backend work.
+Vim-style keybindings with cleared defaults. Two layouts: a default stacked layout and `gadget-dev` for backend work.
 
 ### Claude Code
 

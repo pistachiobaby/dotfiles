@@ -12,23 +12,15 @@ Personal dotfiles for macOS. Configs are stored in `config/` and symlinked to th
 ./install.sh
 ```
 
-This creates symlinks from `config/` to `~/.config/`, `~/.claude/`, `~/.vimrc`, `~/.zshrc`, etc. Existing files are backed up to `*.backup`. The script also builds the Zellij pane-groups plugin if `cargo` is available.
+This creates symlinks from `config/` to `~/.config/`, `~/.claude/`, `~/.vimrc`, `~/.zshrc`, etc. Existing files are backed up to `*.backup`.
 
 To add a new config: add the source file under `config/`, then add a `source:target` entry to the `links` array in `install.sh`.
-
-## Building the Zellij Pane-Groups Plugin
-
-```bash
-cd config/zellij/plugins/pane-groups && ./build.sh
-```
-
-Requires Rust with the `wasm32-wasip1` target. Builds a WASM plugin loaded by Zellij at `~/.config/zellij/plugins/pane-groups.wasm`.
 
 ## Architecture
 
 ### Symlink Mapping
 
-`install.sh` defines ~44 symlink mappings. Each entry maps a repo path to a home directory path. The script handles conflict detection, backup, stale symlink replacement, and parent directory creation.
+`install.sh` auto-discovers files in `config/` and symlinks them to their home directory targets. The script handles conflict detection, backup, stale symlink replacement, and parent directory creation.
 
 ### Shell Environment (zsh)
 
@@ -36,10 +28,9 @@ Requires Rust with the `wasm32-wasip1` target. Builds a WASM plugin loaded by Ze
 
 ### Zellij Integration
 
-The terminal multiplexer setup has three layers:
+The terminal multiplexer setup has two layers:
 - **config.kdl**: Keybindings (vim-style, cleared defaults), plugin aliases, general settings
 - **layouts/**: Predefined pane arrangements (`default.kdl` for stacked, `gadget-dev.kdl` for work)
-- **plugins/pane-groups/**: Custom Rust/WASM plugin for grouping and cycling panes (Alt+g to open, Alt+,/. to cycle)
 
 ### Claude Code Hooks
 
