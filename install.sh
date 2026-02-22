@@ -75,7 +75,7 @@ while IFS= read -r src; do
 
   # Already linked correctly — skip
   if [ -L "$target" ] && [ "$(readlink "$target")" = "$src" ]; then
-    ((skipped++))
+    ((skipped++)) || true
     continue
   fi
 
@@ -87,7 +87,7 @@ while IFS= read -r src; do
     fi
     mv "$target" "$backup"
     warn "BACKUP" "$target → $backup"
-    ((backed_up++))
+    ((backed_up++)) || true
   fi
 
   # Stale symlink — remove it
@@ -97,7 +97,7 @@ while IFS= read -r src; do
 
   ln -s "$src" "$target"
   log "LINK" "$target → $rel"
-  ((linked++))
+  ((linked++)) || true
 done < <(find "$CONFIG_DIR" -type f | sort)
 
 log "DONE" "$linked linked, $skipped unchanged, $backed_up backed up"

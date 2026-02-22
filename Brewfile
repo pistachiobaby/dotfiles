@@ -14,6 +14,8 @@ brew "kind"
 brew "node"
 # Send macOS User Notifications from the command-line
 brew "terminal-notifier"
+# Bring your favorite shell wherever you go through the ssh
+brew "xxh"
 # Pluggable terminal workspace, with terminal multiplexer as the base feature
 brew "zellij"
 # Fish-like fast/unobtrusive autosuggestions for zsh
@@ -24,6 +26,8 @@ brew "zsh-syntax-highlighting"
 brew "coder/coder/coder"
 # A CLI tool to build for the Shopify platform
 brew "shopify/shopify/shopify-cli"
+# Native desktop client for Coder
+cask "coder/coder/coder-desktop"
 cask "font-blex-mono-nerd-font"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
