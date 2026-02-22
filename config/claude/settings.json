@@ -22,17 +22,6 @@
           }
         ]
       }
-    ],
-    "Stop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/rename-tab.sh"
-          }
-        ]
-      }
     ]
   },
   "enabledPlugins": {
