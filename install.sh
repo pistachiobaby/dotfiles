@@ -37,7 +37,11 @@ resolve_target() {
   case "$rel" in
     vim/vimrc)     echo "$HOME/.vimrc" ;;
     zsh/zshrc)     echo "$HOME/.zshrc" ;;
-    ssh/config)    echo "$HOME/.ssh/config" ;;
+    ssh/config)
+      if [ -n "${CODER_AGENT_ID:-}" ]; then
+        return 1  # skip on Coder workspaces — startup script manages SSH config
+      fi
+      echo "$HOME/.ssh/config" ;;
     git/gitconfig) echo "$HOME/.gitconfig" ;;
     *)
       # Directory-level overrides
