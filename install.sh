@@ -29,7 +29,13 @@ resolve_target() {
       # Directory-level overrides
       case "$top_dir" in
         claude)  echo "$HOME/.claude/$rest" ;;
-        ghostty) echo "$HOME/Library/Application Support/com.mitchellh.ghostty/$rest" ;;
+        ghostty)
+          if [[ "$(uname)" == "Darwin" ]]; then
+            echo "$HOME/Library/Application Support/com.mitchellh.ghostty/$rest"
+          else
+            return 1
+          fi
+          ;;
         *)       echo "$HOME/.config/$rel" ;;
       esac
       ;;
@@ -43,7 +49,7 @@ errors=0
 while IFS= read -r src; do
   rel="${src#$CONFIG_DIR/}"
 
-  target="$(resolve_target "$rel")"
+  target="$(resolve_target "$rel")" || continue
 
   # Create parent directory if needed
   mkdir -p "$(dirname "$target")"
@@ -92,4 +98,17 @@ elif command -v nix >/dev/null 2>&1 && [ -f "$DOTFILES_DIR/flake.nix" ]; then
   else
     nix profile install "$DOTFILES_DIR"
   fi
+fi
+
+# --- Set default shell to zsh ---
+
+zsh_path="$(command -v zsh 2>/dev/null || true)"
+if [ -n "$zsh_path" ] && [ "$SHELL" != "$zsh_path" ]; then
+  if ! grep -qx "$zsh_path" /etc/shells 2>/dev/null; then
+    echo "$zsh_path" | sudo tee -a /etc/shells >/dev/null
+  fi
+  sudo chsh -s "$zsh_path" "$(whoami)" 2>/dev/null \
+    || chsh -s "$zsh_path" 2>/dev/null \
+    || echo "SKIP     chsh (could not change default shell to zsh)"
+  echo "shell    $zsh_path"
 fi
