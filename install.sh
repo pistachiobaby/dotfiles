@@ -4,9 +4,18 @@ set -euo pipefail
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 CONFIG_DIR="$DOTFILES_DIR/config"
 
+log()  { printf '  \033[1;32m%s\033[0m  %s\n' "$1" "$2"; }
+warn() { printf '  \033[1;33m%s\033[0m  %s\n' "$1" "$2"; }
+err()  { printf '  \033[1;31m%s\033[0m  %s\n' "$1" "$2"; }
+
+header() {
+  echo ""
+  printf '\033[1;34m==> %s\033[0m\n' "$1"
+}
+
 # --- Require a package manager ---
 if ! command -v brew >/dev/null 2>&1 && ! command -v nix >/dev/null 2>&1; then
-  echo "ERROR    No package manager found (install Homebrew or Nix)"
+  err "ERROR" "No package manager found (install Homebrew or Nix)"
   exit 1
 fi
 
@@ -44,19 +53,24 @@ resolve_target() {
 
 # --- Symlink all config files ---
 
+header "Linking config files"
+
 errors=0
+linked=0
+skipped=0
+backed_up=0
 
 while IFS= read -r src; do
   rel="${src#$CONFIG_DIR/}"
 
-  target="$(resolve_target "$rel")" || continue
+  target="$(resolve_target "$rel")" || { warn "SKIP" "$rel (not supported on this platform)"; continue; }
 
   # Create parent directory if needed
   mkdir -p "$(dirname "$target")"
 
   # Already linked correctly — skip
   if [ -L "$target" ] && [ "$(readlink "$target")" = "$src" ]; then
-    echo "ok       $target"
+    ((skipped++))
     continue
   fi
 
@@ -67,7 +81,8 @@ while IFS= read -r src; do
       backup="$target.backup.$(date +%s)"
     fi
     mv "$target" "$backup"
-    echo "backup   $target → $backup"
+    warn "BACKUP" "$target → $backup"
+    ((backed_up++))
   fi
 
   # Stale symlink — remove it
@@ -76,39 +91,56 @@ while IFS= read -r src; do
   fi
 
   ln -s "$src" "$target"
-  echo "linked   $target → $src"
+  log "LINK" "$target → $rel"
+  ((linked++))
 done < <(find "$CONFIG_DIR" -type f | sort)
 
+log "DONE" "$linked linked, $skipped unchanged, $backed_up backed up"
+
 if [ "$errors" -gt 0 ]; then
-  echo ""
-  echo "$errors error(s) — check output above"
+  err "FAIL" "$errors error(s) — check output above"
   exit 1
 fi
 
 # --- Install packages (Homebrew preferred, Nix fallback) ---
 
-echo ""
+header "Installing packages"
+
 if command -v brew >/dev/null 2>&1 && [ -f "$DOTFILES_DIR/Brewfile" ]; then
-  echo "Installing packages via Homebrew..."
+  log "BREW" "Installing from Brewfile..."
   brew bundle --file="$DOTFILES_DIR/Brewfile"
+  log "DONE" "Homebrew packages installed"
 elif command -v nix >/dev/null 2>&1 && [ -f "$DOTFILES_DIR/flake.nix" ]; then
-  echo "Installing packages via Nix..."
+  log "NIX" "Installing from flake.nix..."
   if nix profile list 2>/dev/null | grep -q "dotfiles-tools"; then
     nix profile upgrade dotfiles-tools
+    log "DONE" "Nix packages upgraded"
   else
     nix profile install "$DOTFILES_DIR"
+    log "DONE" "Nix packages installed"
   fi
 fi
 
 # --- Set default shell to zsh ---
 
+header "Shell"
+
 zsh_path="$(command -v zsh 2>/dev/null || true)"
-if [ -n "$zsh_path" ] && [ "$SHELL" != "$zsh_path" ]; then
+if [ -z "$zsh_path" ]; then
+  warn "SKIP" "zsh not found"
+elif [ "$SHELL" = "$zsh_path" ]; then
+  log "OK" "Already using $zsh_path"
+else
   if ! grep -qx "$zsh_path" /etc/shells 2>/dev/null; then
     echo "$zsh_path" | sudo tee -a /etc/shells >/dev/null
   fi
-  sudo chsh -s "$zsh_path" "$(whoami)" 2>/dev/null \
-    || chsh -s "$zsh_path" 2>/dev/null \
-    || echo "SKIP     chsh (could not change default shell to zsh)"
-  echo "shell    $zsh_path"
+  if sudo chsh -s "$zsh_path" "$(whoami)" 2>/dev/null \
+    || chsh -s "$zsh_path" 2>/dev/null; then
+    log "SHELL" "Default shell set to $zsh_path"
+  else
+    warn "SKIP" "Could not change default shell to zsh"
+  fi
 fi
+
+echo ""
+log "✓" "All done"
