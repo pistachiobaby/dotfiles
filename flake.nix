@@ -42,6 +42,7 @@
               pkgs.coder
               pkgs.shopify-cli
               pkgs.starship
+              pkgs.atuin
             ] ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
               pkgs.terminal-notifier
             ];

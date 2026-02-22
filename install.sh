@@ -60,6 +60,14 @@ resolve_target() {
   esac
 }
 
+# --- Install Oh My Zsh ---
+
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+  header "Installing Oh My Zsh"
+  git clone --depth=1 https://github.com/ohmyzsh/ohmyzsh.git "$HOME/.oh-my-zsh"
+  log "DONE" "Oh My Zsh installed"
+fi
+
 # --- Symlink all config files ---
 
 header "Linking config files"
