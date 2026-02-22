@@ -53,4 +53,9 @@ Karabiner maps Caps Lock to Ctrl and Right Cmd+hjkl to arrow keys. Vim config ma
 
 ### Package Management
 
-`Brewfile` is the source of truth for installed packages. The shell `brew` wrapper automatically keeps it in sync — any `brew install`, `brew uninstall`, or `brew tap` regenerates the Brewfile.
+Two package managers are supported. `install.sh` prefers Homebrew and falls back to Nix. If neither is available, it exits early.
+
+- **Homebrew** (`Brewfile`): Full package set including CLI tools, GUI apps (casks), and VS Code extensions. The shell `brew` wrapper automatically keeps the Brewfile in sync.
+- **Nix** (`flake.nix`): CLI tools only (no casks or VS Code extensions). Uses `nix profile install` with a `buildEnv` derivation called `dotfiles-tools`.
+
+To update Nix packages: `nix flake update` then `nix profile upgrade dotfiles-tools`

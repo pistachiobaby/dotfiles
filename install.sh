@@ -4,6 +4,12 @@ set -euo pipefail
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 CONFIG_DIR="$DOTFILES_DIR/config"
 
+# --- Require a package manager ---
+if ! command -v brew >/dev/null 2>&1 && ! command -v nix >/dev/null 2>&1; then
+  echo "ERROR    No package manager found (install Homebrew or Nix)"
+  exit 1
+fi
+
 # --- Target resolution ---
 # Most files: config/<app>/<path> → ~/.config/<app>/<path>
 # Exceptions handled by case statements in resolve_target.
@@ -81,6 +87,21 @@ if [ "$errors" -gt 0 ]; then
   echo ""
   echo "$errors error(s) — check output above"
   exit 1
+fi
+
+# --- Install packages (Homebrew preferred, Nix fallback) ---
+
+echo ""
+if command -v brew >/dev/null 2>&1 && [ -f "$DOTFILES_DIR/Brewfile" ]; then
+  echo "Installing packages via Homebrew..."
+  brew bundle --file="$DOTFILES_DIR/Brewfile"
+elif command -v nix >/dev/null 2>&1 && [ -f "$DOTFILES_DIR/flake.nix" ]; then
+  echo "Installing packages via Nix..."
+  if nix profile list 2>/dev/null | grep -q "dotfiles-tools"; then
+    nix profile upgrade dotfiles-tools
+  else
+    nix profile install "$DOTFILES_DIR"
+  fi
 fi
 
 # --- Build zellij plugins (requires Rust + wasm32-wasip1 target) ---

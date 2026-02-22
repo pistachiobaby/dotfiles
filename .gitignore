@@ -1,2 +1,11 @@
 .DS_Store
 *.backup
+
+# Editor swap/temp files
+*.swp
+*.swo
+*~
+
+# Nix build output
+result
+
