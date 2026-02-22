@@ -59,3 +59,7 @@ Karabiner remaps Caps Lock to Ctrl and Right Cmd+hjkl to arrow keys. Vim maps `f
 ## Adding a new config
 
 Drop the file under `config/<app>/` and it gets symlinked automatically on the next `./install.sh` run. The default target is `~/.config/<app>/...` — see `resolve_target()` in `install.sh` for exceptions.
+
+## Credits
+
+Heavily based on [scott-rc/dotfiles](https://github.com/scott-rc/dotfiles). For general dotfiles inspiration and best practices, see [dotfiles.github.io](https://dotfiles.github.io/).
