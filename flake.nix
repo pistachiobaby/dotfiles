@@ -41,6 +41,7 @@
               pkgs.zsh-syntax-highlighting
               pkgs.coder
               pkgs.shopify-cli
+              pkgs.starship
             ] ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
               pkgs.terminal-notifier
             ];
