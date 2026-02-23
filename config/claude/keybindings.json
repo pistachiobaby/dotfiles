@@ -7,7 +7,9 @@
       "bindings": {
         "ctrl+t": "app:toggleTodos",
         "meta+o": "app:toggleTranscript",
+        "alt+o": "app:toggleTranscript",
         "meta+shift+o": "app:toggleTeammatePreview",
+        "alt+shift+o": "app:toggleTeammatePreview",
         "ctrl+r": "history:search"
       }
     },
@@ -17,13 +19,16 @@
         "escape": "chat:cancel",
         "shift+tab": "chat:cycleMode",
         "meta+p": "chat:modelPicker",
+        "alt+p": "chat:modelPicker",
         "meta+t": "chat:thinkingToggle",
+        "alt+t": "chat:thinkingToggle",
         "enter": "chat:submit",
         "up": "history:previous",
         "down": "history:next",
         "ctrl+_": "chat:undo",
         "ctrl+shift+-": "chat:undo",
         "meta+g": "chat:externalEditor",
+        "alt+g": "chat:externalEditor",
         "cmd+s": "chat:stash",
         "ctrl+v": "chat:imagePaste"
       }
@@ -141,10 +146,12 @@
         "ctrl+up": "messageSelector:top",
         "shift+up": "messageSelector:top",
         "meta+up": "messageSelector:top",
+        "alt+up": "messageSelector:top",
         "shift+k": "messageSelector:top",
         "ctrl+down": "messageSelector:bottom",
         "shift+down": "messageSelector:bottom",
         "meta+down": "messageSelector:bottom",
+        "alt+down": "messageSelector:bottom",
         "shift+j": "messageSelector:bottom",
         "enter": "messageSelector:select"
       }
