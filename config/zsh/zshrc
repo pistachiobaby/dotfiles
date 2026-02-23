@@ -36,8 +36,13 @@ if command -v atuin &>/dev/null; then
   [ -f "$HOME/.atuin/bin/env" ] && . "$HOME/.atuin/bin/env"
 fi
 
-# Zellij — skip auto-start when already inside zellij or when SSHing in (avoids nesting)
-if [[ -z "$ZELLIJ" && -z "$SSH_TTY" ]]; then
+# Zellij
+if [[ -z "$ZELLIJ" ]]; then
+  if [[ -n "$SSH_TTY" ]]; then
+    # SSH sessions use a minimal layout without the tab bar
+    export ZELLIJ_AUTO_START="true"
+    export ZELLIJ_AUTO_LAYOUT="remote"
+  fi
   eval "$(zellij setup --generate-auto-start zsh)"
 fi
 
