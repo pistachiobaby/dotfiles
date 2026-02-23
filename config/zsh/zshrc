@@ -31,8 +31,10 @@ eval "$(direnv hook zsh)"
 
 
 # Atuin
-eval "$(atuin init zsh --disable-up-arrow)"
-. "$HOME/.atuin/bin/env"
+if command -v atuin &>/dev/null; then
+  eval "$(atuin init zsh --disable-up-arrow)"
+  [ -f "$HOME/.atuin/bin/env" ] && . "$HOME/.atuin/bin/env"
+fi
 
 # Zellij
 eval "$(zellij setup --generate-auto-start zsh)"
