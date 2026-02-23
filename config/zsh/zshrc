@@ -36,8 +36,10 @@ if command -v atuin &>/dev/null; then
   [ -f "$HOME/.atuin/bin/env" ] && . "$HOME/.atuin/bin/env"
 fi
 
-# Zellij
-eval "$(zellij setup --generate-auto-start zsh)"
+# Zellij — skip auto-start when already inside zellij or when SSHing in (avoids nesting)
+if [[ -z "$ZELLIJ" && -z "$SSH_TTY" ]]; then
+  eval "$(zellij setup --generate-auto-start zsh)"
+fi
 
 # Wrap brew to auto-update Brewfile on install/uninstall
 brew() {
