@@ -39,11 +39,10 @@ fi
 # Zellij
 if [[ -z "$ZELLIJ" ]]; then
   if [[ -n "$SSH_TTY" ]]; then
-    # SSH sessions use a minimal layout without the tab bar
-    export ZELLIJ_AUTO_START="true"
-    export ZELLIJ_AUTO_LAYOUT="remote"
+    zellij --layout remote
+  else
+    eval "$(zellij setup --generate-auto-start zsh)"
   fi
-  eval "$(zellij setup --generate-auto-start zsh)"
 fi
 
 # Wrap brew to auto-update Brewfile on install/uninstall
