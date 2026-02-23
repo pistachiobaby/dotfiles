@@ -25,7 +25,7 @@ keybinds clear-defaults=true {
         bind "Ctrl p" { SwitchToMode "normal"; }
         bind "r" { NewPane "right"; SwitchToMode "normal"; }
         bind "w" { ToggleFloatingPanes; SwitchToMode "normal"; }
-        bind "z" { TogglePaneFrames; SwitchToMode "normal"; }
+        bind "z" { MessagePlugin "tab-frames" { name "toggle"; }; SwitchToMode "normal"; }
     }
     tab {
         bind "left" { GoToPreviousTab; }
@@ -259,12 +259,14 @@ plugins {
     welcome-screen location="zellij:session-manager" {
         welcome_screen true
     }
+    tab-frames location="file:~/.config/zellij/plugins/tab-frames.wasm"
 }
 
 // Plugins to load in the background when a new session starts
 // eg. "file:/path/to/my-plugin.wasm"
 // eg. "https://example.com/my-plugin.wasm"
 load_plugins {
+    tab-frames
 }
  
 // Use a simplified UI without special fonts (arrow glyphs)

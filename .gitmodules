@@ -1,0 +1,3 @@
+[submodule "plugins/tab-frames"]
+	path = plugins/tab-frames
+	url = git@github.com:pistachiobaby/zellij-tab-frames.git
