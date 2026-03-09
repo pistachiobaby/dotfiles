@@ -5,5 +5,10 @@
       "Bash(zellij list-sessions:*)",
       "Bash(zellij delete-session:*)"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "gadget",
+    "clickhouse-docs"
+  ],
+  "enableAllProjectMcpServers": true
 }
