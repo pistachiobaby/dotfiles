@@ -102,6 +102,8 @@ Check `scheduledShopifySync` (or equivalent) for models being synced. Common opt
 
 `includeFields` on Shopify webhook triggers limits which field changes generate webhooks. This is already an optimization — confirm it's in use before suggesting it. Only configured per model action in the action's `options.triggers.shopify.includeFields`.
 
+**Echo webhook cost reduction**: When the app's own outbound Shopify mutations trigger echo webhooks, `includeFields` can reduce the cost from 2.0 to 0.2 credits per echo — set `includeFields` to EXCLUDE the field the app's mutation changes. Gadget's local `includeFields` evaluation skips the action (0.2 credit filter check instead of 2.0 credit dispatch). If the mutated field IS included, the action runs at full cost. Tradeoff: external changes to the excluded field are also skipped. See "Outbound Mutation Echo Webhooks" in the customer-app-optimization-checklist for full detection and mitigation guidance.
+
 ## Pricing Reference (as of Feb 2026)
 
 | Plan | Base Price | Included Credits | Overage |
