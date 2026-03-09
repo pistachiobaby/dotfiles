@@ -45,6 +45,13 @@ if [[ -z "$ZELLIJ" ]]; then
   fi
 fi
 
+# Report CWD to Zellij via OSC 7 so new panes inherit the working directory
+_osc7_cwd() {
+  printf '\e]7;file://%s%s\e\\' "${HOST}" "${PWD}"
+}
+add-zsh-hook chpwd _osc7_cwd
+_osc7_cwd
+
 # Wrap brew to auto-update Brewfile on install/uninstall
 brew() {
   command brew "$@"
@@ -130,11 +137,34 @@ kill_ports() {
 
 alias dev-fucked='kill_ports 3000 3001 6000 6666 6667 7233 9000 9464 9980 9200 15432 15433 16379 16381 16382 16383'
 
-# Wrap ssh to reset kitty keyboard protocol after disconnect
+# Wrap ssh to rename Zellij tab and reset kitty keyboard protocol after disconnect
 ssh() {
+  local host
+  # Parse the hostname from ssh args (skip flags and their values)
+  local skip_next=false
+  for arg in "$@"; do
+    if $skip_next; then
+      skip_next=false
+      continue
+    fi
+    case "$arg" in
+      -[bcDEeFIiJLlmOopQRSWw]) skip_next=true ;;
+      -*) ;;
+      *) host="$arg"; break ;;
+    esac
+  done
+
+  # Rename Zellij tab to the ssh host
+  if [[ -n "$ZELLIJ" && -n "$host" ]]; then
+    # Strip username@ if present
+    local display="${host#*@}"
+    zellij action rename-tab "$display"
+  fi
+
   command ssh "$@"
   local ret=$?
   printf '\e[?u\e[>0u' 2>/dev/null
+
   return $ret
 }
 export PATH="$HOME/scripts:$HOME/.local/bin:$PATH"
