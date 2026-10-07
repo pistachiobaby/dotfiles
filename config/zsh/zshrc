@@ -37,10 +37,13 @@ if command -v atuin &>/dev/null; then
 fi
 
 # Zellij
-if [[ -z "$ZELLIJ" ]]; then
+# Only auto-start in an interactive shell on a real terminal that I opened (Ghostty or SSH).
+# Tools that source this file without a TTY, or spawn their own PTY (e.g. Claude), would
+# otherwise each leave behind an orphaned session.
+if [[ -z "$ZELLIJ" && -o interactive && -t 0 && -t 1 ]]; then
   if [[ -n "$SSH_TTY" ]]; then
     zellij --layout remote
-  else
+  elif [[ "$TERM_PROGRAM" == "ghostty" || -n "$GHOSTTY_RESOURCES_DIR" ]]; then
     eval "$(zellij setup --generate-auto-start zsh)"
   fi
 fi
