@@ -1,5 +1,18 @@
 tap "coder/coder"
+tap "launchdarkly/tap"
 tap "shopify/shopify"
+# Microsoft Azure CLI 2.0
+brew "azure-cli"
+# Background rust code check
+brew "bacon"
+# Compiler infrastructure and toolchain library for WebAssembly
+brew "binaryen"
+# Cross-platform make
+brew "cmake"
+# Select default apps for documents and URL schemes on macOS
+brew "duti"
+# Play, record, convert, and stream select audio and video codecs
+brew "ffmpeg"
 # Command-line fuzzy finder written in Go
 brew "fzf"
 # GitHub command-line tool
@@ -8,8 +21,16 @@ brew "gh"
 brew "gum"
 # Kubernetes package manager
 brew "helm"
+# Handy way to save and run project-specific commands
+brew "just"
 # Run local Kubernetes cluster in Docker
 brew "kind"
+# CLI for managing LaunchDarkly feature flags
+brew "ldcli"
+# Polyglot runtime manager (asdf rust clone)
+brew "mise"
+# Small build system for use with gyp or CMake
+brew "ninja"
 # Open-source, cross-platform JavaScript runtime environment
 brew "node"
 # Send macOS User Notifications from the command-line
@@ -22,12 +43,7 @@ brew "zellij"
 brew "zsh-autosuggestions"
 # Fish shell like syntax highlighting for zsh
 brew "zsh-syntax-highlighting"
-# Provisions remote development environments via Terraform
-brew "coder/coder/coder"
-# A CLI tool to build for the Shopify platform
-brew "shopify/shopify/shopify-cli"
-# Native desktop client for Coder
-cask "coder/coder/coder-desktop"
+cask "coder-desktop"
 cask "font-blex-mono-nerd-font"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
@@ -37,6 +53,8 @@ cask "medis"
 cask "temurin@11"
 # Open-source code editor
 cask "visual-studio-code"
+# Wine wrapper built with SwiftUI
+cask "whisky"
 vscode "bbenoist.nix"
 vscode "bierner.jsdoc-markdown-highlighting"
 vscode "bierner.markdown-emoji"
@@ -69,6 +87,7 @@ vscode "ms-python.pylint"
 vscode "ms-python.python"
 vscode "ms-python.vscode-python-envs"
 vscode "ms-vscode.cmake-tools"
+vscode "ms-vscode.cpp-devtools"
 vscode "ms-vscode.cpptools"
 vscode "ms-vscode.cpptools-extension-pack"
 vscode "ms-vscode.cpptools-themes"
@@ -96,3 +115,8 @@ vscode "vscjava.vscode-java-test"
 vscode "vscjava.vscode-maven"
 vscode "vscodevim.vim"
 vscode "yoavbls.pretty-ts-errors"
+cargo "cargo-llvm-cov"
+cargo "trunk"
+cargo "wasm-bindgen-cli"
+cargo "wasm-pack"
+npm "corepack"
