@@ -1,4 +1,5 @@
 syntax on
+set clipboard=unnamed
 
 " Escape
 nmap fd <Esc>
