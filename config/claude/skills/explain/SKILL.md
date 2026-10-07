@@ -1,6 +1,6 @@
 ---
 name: explain
-description: Write or rewrite technical prose in the style of Michael Malis (malisper.me), a plain first-person engineering voice that teaches by building up from a toy example, puts a number on every claim, and keeps the dead ends in. Use for explanations of how something works, summaries (end-of-task reports, investigation findings, recaps), essays, blog posts, project updates, build logs, and postmortem narratives, or when the user says "/explain", "in malisper style", or asks to rewrite a draft in that voice. Do not use for customer emails (support skill), Slack writeups (slack-writeup skill), or PR descriptions (pr-overview) unless the user explicitly asks for this voice there.
+description: Write or rewrite technical prose in the style of Michael Malis (malisper.me), a plain first-person engineering voice that teaches by building up from a toy example, puts a number on every claim, and keeps the dead ends in. Use for explanations of how something works, summaries (end-of-task reports, investigation findings, recaps), PR descriptions (together with the pr-overview skill, which adds the PR shape), essays, blog posts, project updates, build logs, and postmortem narratives, or when the user says "/explain", "in malisper style", or asks to rewrite a draft in that voice. Do not use for customer emails (support skill) or Slack writeups (slack-writeup skill) unless the user explicitly asks for this voice there.
 argument-hint: "[topic to explain, or path to a draft to rewrite]"
 ---
 
@@ -41,6 +41,12 @@ The source is ~90 posts written from 2015 to 2026. They fall into four eras: Lis
 3. The one surprising thing, shown with its real value, not described.
 4. What I didn't verify or don't know, said plainly.
 5. What's next or the open question. Stop there.
+
+**The PR description.** A summary for a reviewer who has the diff open. Load the `pr-overview` skill for the full shape, the length budget, and a worked example.
+1. Opening paragraph with no header: what merging does, with a number and the evidence that it is safe.
+2. The problem, shown with real values.
+3. One section for each choice in the diff a reviewer would question.
+4. What it doesn't fix, what wasn't verified, and one line of what's next.
 
 **The advice essay.** For rules, tools, or career lessons.
 1. State the claim up front and ground it in experience you can put numbers on.
@@ -138,4 +144,5 @@ The rewrite defines the term in one clause, uses real numbers, shows the failure
   - Inline "If you aren't familiar…" clauses replace Concept boxes.
   - A plain recap paragraph replaces the Key insight callout.
   - The piece opens with the result, and the architecture diagram comes where it's first needed, not first.
+- PR descriptions use this voice. The `pr-descriptions` rule and the `pr-overview` skill own their shape and length.
 - Customer-facing replies keep their own rules (no signposting, no em dashes, no process narration). Don't import this voice there.

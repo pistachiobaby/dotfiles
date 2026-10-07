@@ -1,6 +1,6 @@
 # Technical Explanations
 
-When writing technical documentation, PR descriptions, or markdown explainers, follow this structure:
+When writing technical documentation or markdown explainers, follow this structure. PR descriptions are the exception: they follow the `pr-descriptions` rule (short, `explain` voice) and take from this rule only the traced real values and the failure-first examples, not the architecture-first layout or the "Key insight" callout.
 
 ## Architecture First
 

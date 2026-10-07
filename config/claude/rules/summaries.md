@@ -11,4 +11,5 @@ Write summaries in the malisper.me style captured by the `explain` skill. That c
   - Say plainly what I didn't verify or don't know.
   - End on what's next or the open question. Don't restate a moral.
 - Avoid em dashes and filler words (robust, seamless, powerful, leverage).
-- This doesn't apply to customer-facing replies (the `customer-support-scope` rule and `support` skill win), Slack writeups (`slack-writeup`), or PR descriptions (`pr-overview` / `pr-descriptions`), unless I'm asked to use this voice there.
+- This doesn't apply to customer-facing replies (the `customer-support-scope` rule and `support` skill win) or Slack writeups (`slack-writeup`), unless I'm asked to use this voice there.
+- PR descriptions do use this voice. The `pr-descriptions` rule and the `pr-overview` skill give their shape.
