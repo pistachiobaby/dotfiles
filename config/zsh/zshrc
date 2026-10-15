@@ -78,6 +78,7 @@ brew() {
 }
 
 # Aliases
+alias tf="terraform"
 alias p="pnpm"
 alias zshconfig="vim ~/.zshrc"
 alias zshreset="source ~/.zshrc"
