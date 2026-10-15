@@ -1,12 +1,14 @@
 ---
 name: explain
-description: Write or rewrite technical prose in the style of Michael Malis (malisper.me), a plain first-person engineering voice that teaches by building up from a toy example, puts a number on every claim, and keeps the dead ends in. Use for explanations of how something works, summaries (end-of-task reports, investigation findings, recaps), PR descriptions (together with the pr-overview skill, which adds the PR shape), essays, blog posts, project updates, build logs, and postmortem narratives, or when the user says "/explain", "in malisper style", or asks to rewrite a draft in that voice. Do not use for customer emails (support skill) or Slack writeups (slack-writeup skill) unless the user explicitly asks for this voice there.
+description: Write or rewrite technical prose in the style of Michael Malis (malisper.me), a plain engineering voice that teaches by building up from a toy example, puts a number on every claim, and keeps the dead ends in. Use for explanations of how something works, summaries (end-of-task reports, investigation findings, recaps), PR descriptions (together with the pr-overview skill, which adds the PR shape), essays, blog posts, project updates, build logs, and postmortem narratives, or when the user says "/explain", "in malisper style", or asks to rewrite a draft in that voice. Do not use for customer emails (support skill) or Slack writeups (slack-writeup skill) unless the user explicitly asks for this voice there.
 argument-hint: "[topic to explain, or path to a draft to rewrite]"
 ---
 
 # Writing in the malisper.me style
 
-Plain first-person engineering prose that teaches by building. Open with the result and a number. Shrink the problem to a toy. Add one piece at a time and measure each one. Keep the failures and the costs in. End with a recap or what's next.
+Plain engineering prose that teaches by building. Open with the result and a number. Shrink the problem to a toy. Add one piece at a time and measure each one. Keep the failures and the costs in. End with a recap or what's next.
+
+The style is how the information is conveyed, not who is speaking. The source posts are first person, so most of the quoted examples below are too, but grammatical person is not part of the style. First person ("I measured 45 ms"), third person ("the team measured 45 ms"), and no person at all ("Measured: 45 ms") are all fine. Use whichever reads naturally for the piece, and never rewrite a draft just to change its person.
 
 The source is ~90 posts written from 2015 to 2026. They fall into four eras: Lisp macro walkthroughs (2015–16), a one-post-a-day Postgres internals series (2017), career and practice essays (2017–20), and long build narratives about rewriting Postgres in Rust (2026). The voice stays the same across all four eras. What changes is the shape of the post, so pick the shape first.
 
@@ -30,16 +32,16 @@ The source is ~90 posts written from 2015 to 2026. They fall into four eras: Lis
 
 **The field report.** For a project, investigation, or rewrite.
 1. Chronological headers: "Day 1 – The Foundation", "Attempt #2 – c2rust".
-2. Each section covers what I tried, what happened (with numbers), what broke, and what I changed.
+2. Each section covers what was tried, what happened (with numbers), what broke, and what changed.
 3. Cost and time lines in italics at the end of sections (*cost: 8 accounts for one month*).
 4. Give the failure modes memorable names ("organ transplant failure").
 5. Set up risks early and pay them off later ("Remember how I said X was risky? Yeah, well…").
 
 **The summary.** An end-of-task report, investigation findings, or a recap of changes. Usually a few paragraphs, not a post.
 1. First sentence: the result, with its number ("Fixed; the 55 s p95 is now 40 ms", "3 of the 5 failures were the same flake").
-2. What changed or what I found, in the order a reader needs it, not the order I did it. Don't narrate the process.
+2. What changed or what was found, in the order a reader needs it, not the order the work happened in. Don't narrate the process.
 3. The one surprising thing, shown with its real value, not described.
-4. What I didn't verify or don't know, said plainly.
+4. What wasn't verified or isn't known, said plainly.
 5. What's next or the open question. Stop there.
 
 **The PR description.** A summary for a reviewer who has the diff open. Load the `pr-overview` skill for the full shape, the length budget, and a worked example.
@@ -84,12 +86,12 @@ The source is ~90 posts written from 2015 to 2026. They fall into four eras: Lis
 
 ## 5. Sentence-level voice
 
-- Use **I** for what you did and believe, **we** when walking the reader through a build, and **you** for advice.
+- **Any grammatical person.** "I", "we", "you", third person, or impersonal all work. The examples in this section are first person because the source is. Carry over the move each one shows, not its pronoun.
 - Keep sentences short and declarative, one idea each, in everyday words.
 - **Define each term inline the first time it appears**, in one clause flagged so experts can skip it: "If you aren't familiar, X is Y." "For context, …". Don't open with a glossary.
-- **Label opinions**, then give the reason: "Personally, I find…", "In my opinion…".
+- **Label opinions as opinions**, then give the reason: "Personally, I find…", "In my opinion…", "The recommendation here is X, because…".
 - **Ration enthusiasm and make it specific.** "The really cool part is…", "Believe it or not…". Use at most two or three per piece, each tied to a fact that is actually surprising.
-- **Admit limits plainly.** "I've never run Docker in production, so I can't comment on that." "I don't know why it translated it that way." "If you know the real name for this, tell me."
+- **Admit limits plainly.** "I've never run Docker in production, so I can't comment on that." "I don't know why it translated it that way." "Not verified: whether this holds under load." "If you know the real name for this, tell me."
 - **Casual, not cute.** "a big pain", "pretty much", "it turns out", "that's all there is to it". Avoid slang pileups and puns.
 - **Transitions are the connective tissue.** "Now that we have X, we can Y." "Let's take a look at…" "To give you a sense of…" "As an example…" "It turns out…". End with "To recap…" or "Ultimately…".
 - **Punctuation.** Periods and commas. Parentheses for skippable asides, e.g. "(If you don't care about the SQL, skip to the results.)". Save exclamation points for real surprises. Avoid em dashes in prose. An en dash is fine in headings ("Attempt #1 – pgrust-og").
@@ -123,7 +125,7 @@ The source is ~90 posts written from 2015 to 2026. They fall into four eras: Lis
 2. Is there a toy example, and is it reused rather than swapped for a new one each section?
 3. Is every mechanism shown running with real values?
 4. Does every new term get a one-clause definition the first time it appears?
-5. Are opinions marked as mine, with a reason?
+5. Are opinions marked as opinions, with a reason?
 6. Are the failures, costs, and benchmark caveats in?
 7. Could a smart newcomer follow it without leaving the page, while an expert skims past the definitions?
 8. Does it end with a recap or what's next, not a sermon?
