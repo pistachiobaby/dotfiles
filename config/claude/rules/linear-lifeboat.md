@@ -2,6 +2,8 @@
 
 Before the first code change in a gadget-inc repository (an edit, a commit, a new branch), check Linear for a ticket that already covers the work, so two people don't build the same thing.
 
+This rule covers gadget-inc repositories only, and so does its Pylon step. Work anywhere else needs no ticket, even when it's about Gadget work: `~/dotfiles`, personal skills and rules (such as `/focus`), and scratch scripts.
+
 1. Search the **Lifeboat** project (`P-GGT-103`, team RND) with `mcp__linear__list_issues`, passing `project: "P-GGT-103"` and a `query`. Run two or three queries with different words for the work (the subsystem, the symptom, the feature), because titles rarely use the words you'd guess. Look at open tickets and at anything completed in the last two weeks.
 2. **A match assigned to someone else, or already In Progress:** stop before changing code. Tell me the ticket, its assignee and status, and ask how to go on.
 3. **A match that's mine or unassigned:** use it. Assign it to me and move it to In Progress.
