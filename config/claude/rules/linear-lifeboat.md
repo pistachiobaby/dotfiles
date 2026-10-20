@@ -6,8 +6,9 @@ Before the first code change in a gadget-inc repository (an edit, a commit, a ne
 2. **A match assigned to someone else, or already In Progress:** stop before changing code. Tell me the ticket, its assignee and status, and ask how to go on.
 3. **A match that's mine or unassigned:** use it. Assign it to me and move it to In Progress.
 4. **No match:** create one without asking. Use team RND, `project: "P-GGT-103"` (pass the ID, not the name), assignee me, state In Progress. Give it a title that says what the change does, and two or three sentences on why, with the evidence (numbers, environment ids, Pylon or PR links).
-5. Put the ticket's identifier (e.g. `GGT-1234`) in the PR description so Linear links the PR, and name the ticket when reporting back.
+5. **Work that came from a Pylon ticket:** link each Pylon ticket the work answers to the Linear issue, whether you created the issue or reused one. Use the Pylon MCP: `link_product_issue(issue_id: "2373", source: "linear", product_issue_identifier: "GGT-10085")`. When the Linear issue completes, Pylon moves the ticket to Waiting on You, which is my cue to tell the customer. If the Pylon MCP isn't available, say so; the Pylon link in the description from step 4 still goes in.
+6. Put the ticket's identifier (e.g. `GGT-1234`) in the PR description so Linear links the PR, and name the ticket when reporting back.
 
 Read-only work (investigations, queries, answering questions) doesn't need a ticket. If the Linear tools aren't available, say so and carry on.
 
-**Why:** on 19 Oct 2026 I asked for this "to make sure we're not stepping on anyone else's toes".
+**Why:** on 19 Oct 2026 I asked for this "to make sure we're not stepping on anyone else's toes". On 20 Oct only 2 of my 25 open Pylon tickets updated that month were linked to Linear, because linking depended on remembering to do it.
