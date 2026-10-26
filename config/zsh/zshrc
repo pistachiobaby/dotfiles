@@ -186,6 +186,9 @@ ssh() {
 }
 export PATH="$HOME/scripts:$HOME/.local/bin:$PATH"
 
+# Kaigen engine CLI (same path on macOS and Linux).
+[[ -d "$HOME/.kaigen/bin" ]] && export PATH="$HOME/.kaigen/bin:$PATH"
+
 # ASCII BOAT SHELL INTEGRATION START boat
 boat() {
   current_file=$(mktemp)
