@@ -6,8 +6,11 @@ input=$(cat)
 
 cwd=$(echo "$input" | jq -r '.workspace.current_dir // .cwd // empty')
 [ -z "$cwd" ] && cwd=$(pwd)
-# Abbreviate home directory as ~
-cwd_display="${cwd/#$HOME/~}"
+# Windows (Git Bash): C:\Users\... → /c/Users/... so it matches $HOME below
+command -v cygpath &>/dev/null && cwd=$(cygpath -u "$cwd")
+# Abbreviate home directory as ~ (via a variable: bash 4+ would tilde-expand a literal ~ back to $HOME)
+tilde='~'
+cwd_display="${cwd/#$HOME/$tilde}"
 
 model=$(echo "$input" | jq -r '.model.display_name // empty')
 used_pct=$(echo "$input" | jq -r '.context_window.used_percentage // empty')
@@ -35,7 +38,9 @@ if [ -n "$git_branch" ]; then
   cache_file="/tmp/claude-statusline-pr-${cache_key}"
   cache_ttl=60
   now=$(date +%s)
-  if [ -f "$cache_file" ] && [ "$(( now - $(stat -f %m "$cache_file") ))" -lt "$cache_ttl" ]; then
+  # mtime: GNU stat (Git Bash, Linux) first, BSD stat (macOS) as the fallback
+  mtime=$(stat -c %Y "$cache_file" 2>/dev/null || stat -f %m "$cache_file" 2>/dev/null)
+  if [ -f "$cache_file" ] && [ "$(( now - mtime ))" -lt "$cache_ttl" ]; then
     pr_info=$(cat "$cache_file")
   else
     pr_info=$(gh pr view --json number,url --jq '"\(.number) \(.url)"' 2>/dev/null -R "$(git -C "$cwd" --no-optional-locks remote get-url origin 2>/dev/null)" || echo "")
