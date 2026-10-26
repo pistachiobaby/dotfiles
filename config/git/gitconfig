@@ -10,3 +10,6 @@ email = nicholas@gadget.dev
 	excludesfile = ~/.config/git/ignore
 [init]
 	defaultBranch = main
+[include]
+	# Per-machine settings (credential helpers etc.), not tracked. Missing file is ignored.
+	path = ~/.config/git/local
