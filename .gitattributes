@@ -1,0 +1,2 @@
+# LF everywhere, so shell scripts still run when Git for Windows checks out with core.autocrlf=true
+* text=auto eol=lf
