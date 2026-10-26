@@ -18,8 +18,21 @@ header() {
   printf '\033[1;34m==> %s\033[0m\n' "$1"
 }
 
+# --- Platform ---
+# Windows (Git Bash) only gets the Claude config so far: no Oh My Zsh, packages or shell change.
+case "$(uname -s)" in
+  MINGW*|MSYS*|CYGWIN*)
+    windows=true
+    # Plain `ln -s` copies the file in Git Bash. This makes real symlinks (needs Developer Mode or admin).
+    export MSYS=winsymlinks:nativestrict
+    ;;
+  *) windows=false ;;
+esac
+
 # --- Require a package manager ---
-if ! command -v brew >/dev/null 2>&1 && ! command -v nix >/dev/null 2>&1; then
+# Homebrew or Nix on macOS; on Debian/Ubuntu, apt is enough (zellij and mise come from upstream).
+if ! $windows && ! command -v brew >/dev/null 2>&1 && ! command -v nix >/dev/null 2>&1 \
+  && ! command -v apt-get >/dev/null 2>&1; then
   err "ERROR" "No package manager found (install Homebrew or Nix)"
   exit 1
 fi
@@ -63,7 +76,7 @@ resolve_target() {
 
 # --- Install Oh My Zsh ---
 
-if [ ! -d "$HOME/.oh-my-zsh" ]; then
+if ! $windows && [ ! -d "$HOME/.oh-my-zsh" ]; then
   header "Installing Oh My Zsh"
   git clone --depth=1 https://github.com/ohmyzsh/ohmyzsh.git "$HOME/.oh-my-zsh"
   log "DONE" "Oh My Zsh installed"
@@ -72,6 +85,11 @@ fi
 # --- Symlink all config files ---
 
 header "Linking config files"
+
+link_root="$CONFIG_DIR"
+if $windows; then
+  link_root="$CONFIG_DIR/claude"
+fi
 
 errors=0
 linked=0
@@ -111,13 +129,19 @@ while IFS= read -r src; do
   ln -s "$src" "$target"
   log "LINK" "$target → $rel"
   ((linked++)) || true
-done < <(find "$CONFIG_DIR" -type f | sort)
+done < <(find "$link_root" -type f | sort)
 
 log "DONE" "$linked linked, $skipped unchanged, $backed_up backed up"
 
 if [ "$errors" -gt 0 ]; then
   err "FAIL" "$errors error(s) — check output above"
   exit 1
+fi
+
+if $windows; then
+  echo ""
+  log "✓" "All done (Windows: Claude config only)"
+  exit 0
 fi
 
 # --- Install packages (Homebrew preferred, Nix fallback) ---
@@ -136,6 +160,30 @@ elif command -v nix >/dev/null 2>&1 && [ -f "$DOTFILES_DIR/flake.nix" ]; then
   else
     nix profile install "$DOTFILES_DIR"
     log "DONE" "Nix packages installed"
+  fi
+elif command -v apt-get >/dev/null 2>&1; then
+  # Debian/Ubuntu (e.g. a headless server): the shell tools from the archive,
+  # plus zellij and mise from upstream since neither is packaged.
+  apt_packages=(zsh starship atuin direnv fzf gh unzip)
+  if [ -t 0 ] || sudo -n true 2>/dev/null; then
+    log "APT" "Installing ${apt_packages[*]}..."
+    sudo apt-get install -y "${apt_packages[@]}"
+    log "DONE" "apt packages installed"
+  else
+    warn "SKIP" "No terminal for sudo. Run: sudo apt-get install -y ${apt_packages[*]}"
+  fi
+
+  mkdir -p "$HOME/.local/bin"
+  if ! command -v zellij >/dev/null 2>&1 && [ ! -x "$HOME/.local/bin/zellij" ]; then
+    log "ZELLIJ" "Downloading the latest release to ~/.local/bin..."
+    curl -fsSL "https://github.com/zellij-org/zellij/releases/latest/download/zellij-$(uname -m)-unknown-linux-musl.tar.gz" \
+      | tar -xz -C "$HOME/.local/bin" zellij
+    log "DONE" "zellij $("$HOME/.local/bin/zellij" --version | awk '{print $2}') installed"
+  fi
+  if ! command -v mise >/dev/null 2>&1 && [ ! -x "$HOME/.local/bin/mise" ]; then
+    log "MISE" "Installing via mise.run to ~/.local/bin..."
+    curl -fsSL https://mise.run | MISE_INSTALL_PATH="$HOME/.local/bin/mise" sh
+    log "DONE" "mise installed"
   fi
 fi
 
