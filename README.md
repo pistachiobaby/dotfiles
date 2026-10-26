@@ -18,6 +18,12 @@ cd ~/dotfiles && ./install.sh
 
 Existing files are backed up before being replaced. Running it again is safe — it skips links that are already correct.
 
+### Windows
+
+Only the Claude Code config is set up on Windows so far. Run the same two commands from Git Bash, with Developer Mode on (or an admin shell) so it can create symlinks. `install.sh` links `config/claude/` into `~/.claude/` and skips Oh My Zsh, packages and the shell change.
+
+The statusline needs `jq`, and its PR link needs `gh`: `winget install jqlang.jq GitHub.cli`.
+
 ## What's in here
 
 ```
