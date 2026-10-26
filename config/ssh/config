@@ -3,6 +3,9 @@
 # This won't be added again if you remove it.
 Include ~/.orbstack/ssh/config
 
+# UseKeychain is macOS-only; without this, Linux ssh rejects the whole file.
+IgnoreUnknown UseKeychain
+
 Host github.com
   AddKeysToAgent yes
   UseKeychain yes
